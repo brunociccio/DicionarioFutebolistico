@@ -44,14 +44,14 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Desabilita o CSRF para simplificar as requisições
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/diciofut-login", "/css/**", "/js/**", "/images/**").permitAll() // Permite acesso à página de login e recursos estáticos
-                .requestMatchers("/ChatFutDicio").hasAnyRole("USER", "ADMIN") // Permite acesso ao chat para usuários autenticados
+                .requestMatchers("/chatfutdicio").hasAnyRole("USER", "ADMIN") // Permite acesso ao chat para usuários autenticados
                 .requestMatchers("/**").hasRole("ADMIN") // Permite acesso total aos administradores
                 .anyRequest().authenticated() // Exige autenticação para qualquer outra requisição
             )
             .formLogin(form -> form
                 .loginPage("/diciofut-login") // Página de login customizada
                 .loginProcessingUrl("/login") // URL para processar o login via formulário
-                .defaultSuccessUrl("/ChatFutDicio", true) // Redireciona para o chat após login bem-sucedido
+                .defaultSuccessUrl("/chatfutdicio", true) // Redireciona para o chat após login bem-sucedido
                 .failureUrl("/diciofut-login?error=true") // Redireciona para a página de login com erro
                 .permitAll() // Permite acesso a qualquer pessoa à página de login
             )
