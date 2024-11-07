@@ -41,13 +41,14 @@
         chatBox.innerHTML += `<p><strong>Você:</strong> ${userMessage}</p>`;
 
         try {
-            const response = await fetch("/chatFutDicio/ask", {
+            const response = await fetch("/chatfutdicio/ask", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
                 },
                 body: new URLSearchParams({ question: userMessage })
             });
+            
 
             if (!response.ok) {
                 throw new Error(`Erro: ${response.statusText}`);
