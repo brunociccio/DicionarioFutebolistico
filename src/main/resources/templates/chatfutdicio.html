@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicionário Futebolístico - Chat</title>
+    <link rel="stylesheet" href="/css/chat.css">
+</head>
+<body>
+
+<div class="chat-container">
+    <h2>Curiosidades Futebolísticas</h2>
+    <div class="chat-box" id="chat-box">
+        <!-- As mensagens do chat aparecerão aqui -->
+    </div>
+    <div>
+        <input type="text" id="userMessage" class="message-input" placeholder="Digite sua curiosidade...">
+        <button id="sendButton" class="send-button">Enviar</button>
+    </div>
+    <button id="logoutButton" class="logout-button">Logout</button>
+</div>
+
+<script>
+    document.getElementById("sendButton").addEventListener("click", sendMessage);
+
+    document.getElementById("userMessage").addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+            sendMessage();
+        }
+    });
+
+    async function sendMessage() {
+        const userMessage = document.getElementById("userMessage").value;
+
+        if (!userMessage) {
+            alert("Por favor, insira uma mensagem.");
+            return;
+        }
+
+        const chatBox = document.getElementById("chat-box");
+        chatBox.innerHTML += `<p><strong>Você:</strong> ${userMessage}</p>`;
+
+        try {
+            const response = await fetch("/chatFutDicio/ask", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({ question: userMessage })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro: ${response.statusText}`);
+            }
+
+            const answer = await response.text();
+            chatBox.innerHTML += `<p><strong>Futebol Bot:</strong> ${answer}</p>`;
+
+        } catch (error) {
+            console.error("Erro ao enviar mensagem:", error);
+            chatBox.innerHTML += `<p><strong>Erro:</strong> ${error.message}</p>`;
+        }
+
+        document.getElementById("userMessage").value = "";
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    document.getElementById("logoutButton").addEventListener("click", function() {
+        window.location.href = "/logout";
+    });
+</script>
+
+</body>
+</html>
